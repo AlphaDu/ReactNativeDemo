@@ -5,22 +5,20 @@ const REGREX = '';
 //status  0:格式正常，1.校验不通过
 //isFocus true:选中，false:未选中，
 function onUserNameChange() {
-    return {
-
-    }
+    return {}
 }
 function illeagalValueNotify() {
-    return {
-
-    }
+    return {}
 }
 class UserNameBox extends Component {
     static defaultProps = {
-        status:0
+        status: 0
     };
-    constructor(props){
+
+    constructor(props) {
         super(props);
     }
+
     render() {
         let lastStyle = {};
         if (this.props.isChoosen && this.props.isChoosen == true) {
@@ -32,17 +30,13 @@ class UserNameBox extends Component {
                           onChangeText={
                               () => {
                                   this.props.dispatch(onUserNameChange());
-                                  
+
                               }
                           }
         />);
     };
 }
 const styles = StyleSheet.create({
-    onFocus:{
-
-    },
-    normal:{
-
-    }
+    onFocus: {},
+    normal: {}
 });

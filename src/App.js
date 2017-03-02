@@ -9,7 +9,7 @@ class App extends Component {
         super(props);
     }
     render(){
-        if(this.props.user == null || !this.props.user){
+        if(/*this.props.user == null || !this.props.user*/null){
             return <LoginUI dispatch={this.props.dispatch}/>
         }else{
             return <Mainpage dispatch={this.props.dispatch} user={this.props.user}/>
