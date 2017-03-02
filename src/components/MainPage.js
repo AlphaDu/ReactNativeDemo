@@ -12,7 +12,7 @@ import Drawer from 'react-native-drawer-menu';
 const {width, height} = Dimensions.get('window');
 
 const url = "http://www.58.com";
-export default class WebViewExample extends Component {
+export default class Mainpage extends Component {
 
     constructor(props) {
         super(props);
