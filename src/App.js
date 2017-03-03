@@ -3,7 +3,7 @@ import LoginUI from './components/Login.js'
 import {Provider, connect} from 'react-redux'
 import reducers from './reducers/index.js'
 import Mainpage from './components/MainPage.js'
-
+import MenuList from './components/MenuList'
 class App extends Component {
     constructor(props) {
         super(props);
@@ -12,7 +12,8 @@ class App extends Component {
         if(/*this.props.user == null || !this.props.user*/null){
             return <LoginUI dispatch={this.props.dispatch}/>
         }else{
-            return <Mainpage dispatch={this.props.dispatch} user={this.props.user}/>
+            // return <Mainpage dispatch={this.props.dispatch} user={this.props.user}/>
+            return <MenuList/>
         }
     }
 }

@@ -1,4 +1,3 @@
-'use strict';
 import React, { Component } from 'react';
 import {
     StyleSheet,
@@ -6,70 +5,68 @@ import {
     WebView,
     Dimensions,
     Text,
-    Button
+    Button,
+    Animated,
+    TouchableHighlight
 } from 'react-native';
-import Drawer from 'react-native-drawer-menu';
-const {width, height} = Dimensions.get('window');
-
-const url = "http://www.58.com";
-export default class Mainpage extends Component {
-
-    constructor(props) {
+export default class mainPage extends Component{
+    constructor (props){
         super(props);
+        this.state = {
+          heightAni:new Animated.Value(50)
+        }
     }
-
-    render() {
-        // prepare your drawer content
-        var drawerContent = (<View style={styles.drawerContent}>
-            <View style={styles.leftTop}/>
-            <View style={styles.leftBottom}>
-                <View><Text>Drawer Content</Text></View>
-            </View>
-        </View>);
-        // customize drawer's style (Optional)
-        var customStyles = {
-            drawer: {
-                shadowColor: '#000',
-                shadowOpacity: 0.4,
-                shadowRadius: 10
-            },
-            mask: {}, // style of mask if it is enabled
-            main: {} // style of main board
-        };
+    render(){
         return (
             <View style={styles.container}>
-            <Drawer ref="drawer"
-                style={styles.container}
-                drawerWidth={300}
-                drawerContent={drawerContent}
-                type={Drawer.types.Overlay}
-                customStyles={{drawer: styles.drawer}}
-                drawerPosition={Drawer.positions.Right}
-                onDrawerOpen={() => {console.log('Drawer is opened');}}
-                onDrawerClose={() => {console.log('Drawer is closed')}}
-            >
-                <View style={styles.content}>
-                    <Text>{Object.values(Drawer.positions).join(' ')}</Text>
-                    <Text>{Object.values(Drawer.types).join(' ')}</Text>
-
+                <View style={styles.cate}>
+                <TouchableHighlight onPress={()=>{}}>
+                    <Text>test</Text>
+                </TouchableHighlight>
+            </View>
+                <Animated.View style={{
+                    width:100,
+          height:this.state.heightAni,
+        backgroundColor:'#23B7E5',
+        justifyContent: 'center',
+        marginTop:5,
+        alignItems: 'center'
+                }}>
+                    <TouchableHighlight onPress={()=>{
+                            Animated.timing(
+                                this.state.heightAni,
+                                {toValue:200}
+                            ).start();
+                    }} >
+                        <Text>test</Text>
+                    </TouchableHighlight>
+                </Animated.View>
+                <View style={styles.cate}>
+                    <TouchableHighlight onPress={()=>{}}>
+                        <Text>test</Text>
+                    </TouchableHighlight>
                 </View>
-
-            </Drawer>
-                <Button onPress={()=>{
-                    let _drawer = this.refs.drawer;
-                    _drawer.openDrawer();
-                }} title="test"/>
             </View>
         );
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: 'column',
-        backgroundColor: '#f1f1f1',
-        paddingTop:20,
-        borderWidth:2
+styles = StyleSheet.create({
+    container:{
+        flex:1,
+        flexDirection:'column',
+        backgroundColor:'#1C2B36',
+        alignItems: 'center',
+        width:300
     },
+    cate:{
+        width:100,
+        height:50,
+        backgroundColor:'#23B7E5',
+        justifyContent: 'center',
+        marginTop:5,
+        alignItems: 'center'
+    },
+    member:{
+
+    }
 });

@@ -1,23 +1,40 @@
 /**
  * Created by ljunb on 16/5/26.
  */
-import React, {Component,} from 'react'
+import React,{Component} from 'react'
 import {
     View,
     Text,
-    TouchHighLight,
-    StyleSheet
-
+    TouchableHighlight,
+    StyleSheet,
+    Alert,
+    Animated,
+    ScrollView
 } from 'react-native'
 
-const menuRouter = [
+const menuRouterList = [
     {
-        category: "TEST"
-        children: [
-            {}
+        title: "TEST",
+        childs: [
+            {
+                title: 'c1'
+            },
+            {
+                title: 'c2'
+            }
         ]
     },
-    {},
+    {
+        title: "TEST",
+        childs: [
+            {
+                title: 'c1'
+            },
+            {
+                title: 'c2'
+            }
+        ]
+    }
 ];
 export default class MenuList extends Component {
     constructor(props) {
@@ -25,62 +42,121 @@ export default class MenuList extends Component {
     }
 
     render() {
-
         return (
-            <View>
-
-            </View>
+            <ScrollView style={styles.menuContainer}>
+                {
+                    menuRouterList.map(
+                        (router) => {
+                            return (
+                                <Category title={router.title} childs={router.childs}/>
+                            );
+                        }
+                    )
+                }
+            </ScrollView>
         );
     }
 }
 class Category extends Component {
     constructor(props) {
         super(props);
+        this.state ={
+            isOpen: false,
+            memberHeightAni:new Animated.Value(0)
+        }
     }
     static propTypes = {
-        onClick:React.propTypes.func.Required
+        title: React.PropTypes.string.isRequired,
+        childs: React.PropTypes.array
     };
-    static defaultState = {
-        isOpen: false
+    static state = {
+        isOpen: false,
+        memberHeightAni:new Animated.Value(0)
     };
     change = () => {
         this.setState({
-            isOpen: !this.state.isOpen
+            isOpen:!this.state.isOpen
         });
+        if(this.state.isOpen){
+            Animated.timing(this.state.memberHeightAni,{toValue:20 * this.props.childs.length}).start();
+        }else{
+            Animated.timing(this.state.memberHeightAni,{toValue:0}).start();
+        }
     };
     isOpen = () => {
         return this.state.isOpen
     };
-    _onClick =() =>{
-        this.change();
-        this.props.onClick();
-    };
+
+
     render() {
-        let _style = isOpen? styles.category_open : styles.catefory_close;
-        return(
-            <TouchableHighLight style={style} onClick={_onClick}/>
+        return (
+           <View style={{marginTop:5,alignItems: 'center'}}>
+                <View style={styles.cateButton}>
+                    <TouchableHighlight onPress = {this.change}>
+                        <Text>{this.props.title}</Text>
+                    </TouchableHighlight>
+                </View>
+           <Animated.View style={{
+                width:100,
+                height:this.state.memberHeightAni,
+                backgroundColor:'#23B7E5',
+                justifyContent: 'center',
+                marginTop:5,
+                alignItems: 'center'
+              }}>
+               {
+                   this.props.childs.map(
+                       (child) => {
+                           return (<Member title={child.title}/>)
+                       }
+                   )
+               }
+           </Animated.View>
+           </View>
+
         );
     }
 }
-class Member extends Component{
-    constructor(props){
+class Member extends Component {
+    constructor(props) {
         super(props);
     }
-    render(){
 
+    render() {
+        return (
+            <View style={styles.member}>
+                <TouchableHighlight>
+                    <Text>{this.props.title}</Text>
+                </TouchableHighlight>
+            </View>
+        );
     }
 }
 const styles = StyleSheet.create({
-    category_open:{
-
+    menuContainer: {
+        flex:1,
+        flexDirection: 'column',
+        backgroundColor: '#1C2B36',
+        width:200,
+        height:27
     },
-    catefory_close:{
-
+    member: {
+        flex: 1,
+        flexDirection: 'column',
+        backgroundColor: '#00ffff',
+        width: 100,
+        height:30,
+        marginTop:1,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
-    member_normal:{
-
-    },
-    menber_selected:{
-
+    cateButton:{
+        flex:1,
+        flexDirection: 'column',
+        backgroundColor: '#3CB259',
+        height:30,
+        width:170,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });
