@@ -13,7 +13,12 @@ class LoginUI extends Component {
     constructor(props) {
         super(props);
     }
+    getLastLogonUser(){
 
+    }
+    componentDidMount(){
+
+    }
     render() {
         let messageStyle = style.normal;
         let message = '';
@@ -59,7 +64,7 @@ class LoginUI extends Component {
                     () => {
                         this.props.dispatch(loginService())
                     }
-                } title="      登了个录      " style={style.loginButton} color="#1ABC9C"/>
+                } title="      登 录      " style={style.loginButton} color="#1ABC9C"/>
                 <Text style={messageStyle}>{message}</Text>
             </View>
         );

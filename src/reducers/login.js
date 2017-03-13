@@ -2,28 +2,29 @@
 import appConsts from  '../consts/appConsts.js'
 
 const initialstate = {
-    loginStatus:'NORMAL'};
+    loginStatus: 'NORMAL'
+};
 
-function login(state = initialstate,action) {
-    if(action.type == appConsts.login.sendingLoginRequest){
-        let state1 = {
-                ...state ,loginStatus:appConsts.login.sendingLoginRequest
-            };
-            return state1;
-    }
-    if (action.type == appConsts.login.loginSucceed){
+function login(state = initialstate, action) {
+    if (action.type == appConsts.login.sendingLoginRequest) {
         return {
-            ...state ,loginStatus:appConsts.login.loginSucceed
+            ...state, loginStatus: appConsts.login.sendingLoginRequest
+        };
+
+    }
+    if (action.type == appConsts.login.loginSucceed) {
+        return {
+            ...state, loginStatus: appConsts.login.loginSucceed
         };
     }
-    if(action.type == appConsts.login.loginFailed){
+    if (action.type == appConsts.login.loginFailed) {
         return {
-            ...state , loginStatus:appConsts.login.loginFailed
+            ...state, loginStatus: appConsts.login.loginFailed
         }
     }
-    if (action.type == appConsts.page.jumpToMainpage){
+    if (action.type == appConsts.page.jumpToMainpage) {
         return {
-            ...state ,user:'testUser'
+            ...state, user: 'testUser'
         }
     }
     return state;
