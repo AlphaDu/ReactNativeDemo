@@ -11,6 +11,7 @@ import TabBar from '../components/TabBar';
 import Page1 from '../page/TestPage1'
 import Page2 from '../page/TestPage2'
 import Page3 from '../components/MenuList';
+import LoadedList from '../page/LoadedList'
 import ProfileView from '../page/ProfileView';
 export default class TabBarView extends Component {
     constructor(props){
@@ -20,14 +21,18 @@ export default class TabBarView extends Component {
         return (
             <ScrollableTabView
                 tabBarPosition='bottom'
-                scrollWithoutAnimation={true}
+                locked
+                scrollWithoutAnimation
                 renderTabBar={
                     ()=><DefaultTabBar />
                 }
+
             >
                 <Page1 tabLabel='Tab #1' key={1}/>
-                <Page3 tabLabel="Tab #2" key={2}/>
+                <Page2 tabLabel='Tab #2' key={2}/>
+                <Page3 tabLabel="Tab #3" key={3}/>
                 <ProfileView tabLabel="profile"/>
+                <LoadedList tabLabel="DownLoad"/>
             </ScrollableTabView>
 
         );

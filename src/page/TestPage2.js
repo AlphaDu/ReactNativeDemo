@@ -23,7 +23,7 @@ class TestPage2 extends Component {
                 <View style={{width:100,height:100,backgroundColor:"#ea0000",margin:10}}>
                     <Text >1</Text>
                 </View>
-                <View   ref="moveBlock" style={{position:'absolute',width:100,height:100,backgroundColor:"#ea00ff",margin:10,top:20}}
+                <View   ref="moveBlock" style={{position:'absolute',width:100,height:100,backgroundColor:"#ea00ff",margin:10,right:0}}
                     onStartShouldSetResponder={(event) =>{
                         console.log("onStartShouldSetResponder");
                         return true
