@@ -1,36 +1,43 @@
 import React, {Component} from 'react';
-import {StyleSheet, TextInput, View, Button, Alert,Text} from 'react-native';
-import {Provider,connect} from 'react-redux'
+import {StyleSheet, TextInput, View, Button, Alert, Text} from 'react-native';
+import {Provider, connect} from 'react-redux'
 import {createStore} from 'redux'
 import loginService from '../actions/login.js'
 import appConsts from '../consts/appConsts'
+import {observer} from 'mobx-react/native'
+import userStore  from '../mobx/UserStore'
+
+@observer
 class LoginUI extends Component {
-    state = {
+    state={
         userNameStyle: style.InputBox,
         passwordStyle: style.InputBox
     };
 
-    constructor(props) {
+    constructor (props) {
         super(props);
     }
-    getLastLogonUser(){
+
+    getLastLogonUser () {
 
     }
-    componentDidMount(){
+
+    componentDidMount () {
 
     }
-    render() {
-        let messageStyle = style.normal;
-        let message = '';
-        if (this.props.loginStatus == appConsts.login.sendingLoginRequest) {
-            messageStyle = style.sending;
-            message = 'logining ...';
-        } else if (this.props.loginStatus == appConsts.login.loginSucceed) {
-            messageStyle = style.succeed;
-            message = 'login succeed';
-        } else if (this.props.loginStatus == appConsts.login.loginFailed) {
-            messageStyle = style.failed;
-            message = 'login failed'
+
+    render () {
+        let messageStyle=style.normal;
+        let message='';
+        if (this.props.loginStatus == appConsts.login.sendingLoginRequest){
+            messageStyle=style.sending;
+            message='logining ...';
+        } else if (this.props.loginStatus == appConsts.login.loginSucceed){
+            messageStyle=style.succeed;
+            message='login succeed';
+        } else if (this.props.loginStatus == appConsts.login.loginFailed){
+            messageStyle=style.failed;
+            message='login failed'
         }
         return (
             <View style={style.loginContainer}>
@@ -41,6 +48,7 @@ class LoginUI extends Component {
                                    userNameStyle: style.InputBoxChoosen
                                });
                            }}
+                           onChangeText={(username)=>this.setState({username})}
                            onBlur={() => {
                                this.setState({
                                    userNameStyle: style.InputBox
@@ -54,6 +62,7 @@ class LoginUI extends Component {
                                    passwordStyle: style.InputBoxChoosen
                                });
                            }}
+                           onChangeText={(password)=>this.setState({password})}
                            onBlur={() => {
                                this.setState({
                                    passwordStyle: style.InputBox
@@ -62,7 +71,7 @@ class LoginUI extends Component {
                 />
                 <Button onPress={
                     () => {
-                        this.props.dispatch(loginService())
+                        userStore.sendLoginRequest(this.state.username,this.state.password)
                     }
                 } title="      登 录      " style={style.loginButton} color="#1ABC9C"/>
                 <Text style={messageStyle}>{message}</Text>
@@ -70,7 +79,7 @@ class LoginUI extends Component {
         );
     }
 }
-const style = StyleSheet.create({
+const style=StyleSheet.create({
         loginContainer: {
             flex: 1,
             justifyContent: 'center',
@@ -111,11 +120,4 @@ const style = StyleSheet.create({
     }
 );
 
-export default connect(
-    (state)=>{
-        return {
-            user:state.user,
-            loginStatus: state.loginStatus
-        }
-    }
-)(LoginUI);
+export default LoginUI;

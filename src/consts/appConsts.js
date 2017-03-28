@@ -11,4 +11,5 @@ login:{
 page:{
     jumpToMainpage:'JUMP_TO_MAINPAGE'
 }
+
 }
