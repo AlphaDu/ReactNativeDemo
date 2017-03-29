@@ -3,6 +3,8 @@ import {
     View,
     Text,
     Image,
+    TextInput,
+    Button,
     TouchableHighlight,
     Platform,
     StyleSheet,
@@ -14,7 +16,7 @@ import {
     Animated,
     ListView
 } from 'react-native'
-let model = ['a','b','c'];
+let model = ['a','b','c','e','f','g','h'];
 
 class ListPages extends Component{
     constructor(props){
@@ -22,30 +24,65 @@ class ListPages extends Component{
         this.state = {
             dataSource: new ListView.DataSource({
                 rowHasChanged: (row1, row2) => row1 !== row2,
-            })
+            }),
+            text:''
         }
     }
-    _renderRow = ()=>{
-
+    _renderRow = (data)=>{
+        return (
+            <ListCell>{data}</ListCell>
+        )
     };
     _hasNext = ()=>{
-
+        addNum = this.state.text * 1;
+        for (let i = 0;i <addNum;i ++){
+            model.push(i);
+        }
+        this.setState({
+            dataSource:this.state.dataSource.cloneWithRows(model.slice(0))
+        });
+    };
+    appendList = (text) =>{
+        for(let i = 0;i <text; i ++){
+            model.push(i);
+        }
+        this.setState({
+           dataSource:this.state.dataSource.cloneWithRows(model.slice(0))
+        });
     };
     render(){
         return (
-            <ListView
+            <View style={{flex:1,flexDirection:'column'}}>
+                <View style={{flex:9}}>
+                    <ListView
+                        dataSource={this.state.dataSource.cloneWithRows(model.slice(0))}
+                        renderRow={this._renderRow}
+                        onEndReachedThreshold={10}
+                        onEndReached={this._hasNext}/>
+                </View>
+                <View style={{flex:1,flexDirection:'row'}}>
+                    <TextInput style={{flex:7,width:200}} onChangeText={(text)=>this.setState({text})} />
+                    <Button title="DD" style={{flex:2,width:100}} onPress={()=>this.appendList(this.state.text)}/>
+                </View>
+            </View>
 
-              dataSource={this.state.dataSource.cloneWithRows(model.slice(0))}
-              renderRow={this._renderRow}
-            onEndReached={this._hasNext}/>
         )
     }
 }
-const ListCell = (text)=> (
-        <View style={{height:100,marginBottom:5,marginTop:5,backgroundColor:"#5ed68e",justifyContent:'center',alignItems: 'center'}}>
-            <Text>wocao</Text>
-        </View>
-    )
+class ListCell extends Component{
+    render (){
+        return (
+            <View style={{height:100,marginBottom:5,marginTop:5,backgroundColor:"#5ed68e",justifyContent:'center',alignItems: 'center'}}>
+                <Text>{this.props.children}</Text>
+            </View>
+        )
+    }
+}
+// const ListCell = (children)=> (
+//         <View style={{height:100,marginBottom:5,marginTop:5,backgroundColor:"#5ed68e",justifyContent:'center',alignItems: 'center'}}>
+//             <Text>{children}</Text>
+//         </View>
+//     );
 
 
-export default ListCell
+export default ListPages
