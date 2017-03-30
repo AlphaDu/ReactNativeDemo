@@ -4,6 +4,7 @@ import {Map} from 'immutable';
 const defaultController = Map({title:'MAINPAGE',component:ProfileView});
 class  DynamicTabStore{
     @observable controllers = [defaultController];
+    @observable index = 1;
     @action close = (i) =>{
 
     };

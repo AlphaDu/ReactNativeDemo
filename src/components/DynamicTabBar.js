@@ -20,10 +20,9 @@ import {observer} from 'mobx-react/native'
 import {reaction} from 'mobx'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import dynamicTabStore from '../store/DynamicTabStore'
-import ScrollableTabView from 'react-native-scrollable-tab-view'
-import DynamicTabBar from '../components/DynamicTabBar'
 const MaxTabNum=10;
-class ScrollableTabBar extends Component {
+@observer
+export default class ScrollableTabBar extends Component {
     static propType={
         goToPage: React.PropTypes.func,
         activeTab: React.PropTypes.number,
@@ -50,9 +49,7 @@ class ScrollableTabBar extends Component {
                         dynamicTabStore.controllers.map((controller, index) => {
                             return <TabCell label={controller.title} onPress={()=>this.props.goToPage(index)}/>
                         })
-                    }{
-                    this.props.tabs.length >= 10?<AppendCell onPress={this.addTab}/>:null
-                }
+                    }
                 </ScrollView>
             </View>
         )
@@ -83,25 +80,6 @@ class AppendCell extends Component {
                     <Icon name="add"/>
                 </View>
             </TouchablaOpacity>
-        )
-    }
-
-}
-@observer
-export default class TestPage extends Component{
-    render(){
-        return (
-            <View style={{flex:1}}>
-                <ScrollableTabView
-                renderTabBar={()=><DynamicTabBar/>} >
-                    {
-                        dynamicTabStore.controllers.map((controller,index)=>{
-                            let Component = controller.component;
-                            return <Component tabLabel={controller.title}/>
-                        })
-                    }
-                </ScrollableTabView>
-            </View>
         )
     }
 }
