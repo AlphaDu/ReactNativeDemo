@@ -11,3 +11,5 @@ class  DynamicTabStore{
       this.controllers.push(defaultController);
     }
 }
+const dynamicTabStore = new DynamicTabStore();
+export default dynamicTabStore;

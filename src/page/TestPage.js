@@ -16,8 +16,12 @@ import {
     Animated,
     ListView
 } from 'react-native'
+import {observer} from 'mobx-react/native'
+import {reaction} from 'mobx'
 import Icon from 'react-native-vector-icons/FontAwesome';
+import dynamicTabStore from '../store/DynamicTabStore'
 const MaxTabNum=10;
+@observer
 export default class ScrollableTabBar extends Component {
     static propType={
         goToPage: React.PropTypes.func,
@@ -25,52 +29,59 @@ export default class ScrollableTabBar extends Component {
         tabs: React.PropTypes.array,
         tabNames: React.PropTypes.array
     };
+
     constructor (props) {
         super(props);
-        this.state = {
-            tabNums : this.props.tabs.length
+        this.state={
+            tabNums: this.props.tabs.length
         }
     }
-    addTab = ()=>{
-      tabs.push('MAINPAGAE');
-
+    addTab=() => {
+        dynamicTabStore.append();
     };
-
     render () {
         return (
             <View style={{height:60}}>
                 <ScrollView showsHorizontalScrollIndicator={false}
                             horizontal
                             style={{backgroundColor:'#e7f276'}}>
-                    <TabCell />
-                    <TabCell/>
-                    <TabCell/><TabCell/><TabCell/><TabCell/><AppendCell/>
+                    {
+                        dynamicTabStore.controllers.map((controller, index) => {
+                            return <TabCell label={controller.title} onPress={()=>this.props.goToPage(index)}/>
+                        })
+                    }{
+                    this.props.tabs.length >= 10?<AppendCell onPress={this.addTab}/>:null
+                }
                 </ScrollView>
             </View>
         )
     }
 };
-class TabCell extends Component(){
-    static propType ={
-        active:React.PropTypes.bool,
-        label:React.PropTypes.string
-
+class TabCell extends Component() {
+    static propType={
+        active: React.PropTypes.bool,
+        label: React.PropTypes.string,
+        onPress: React.PropTypes.func,
     };
-    render(){
+
+    render () {
         return (
-            <TouchablaOpacity>
+            <TouchablaOpacity onPress={this.props.onPress}>
                 <View style={{width:100,marginRight:5,backgroundColor:'#8afc7b'}}>
-                    <Icon name="add"  />
+                    <Text>{this.props.label}</Text>
                 </View>
             </TouchablaOpacity>
         )
     }
 }
-class AppendCell extends Component{
-    render(){
-        return(
-            <View style={{width:50,marginRight:5,backgroundColor:'#a5a5a5'}}>
-            </View>
+class AppendCell extends Component {
+    render () {
+        return (
+            <TouchablaOpacity onPress={this.props.onPress}>
+                <View style={{width:50,marginRight:5,backgroundColor:'#a5a5a5'}}>
+                    <Icon name="add"/>
+                </View>
+            </TouchablaOpacity>
         )
     }
 }
