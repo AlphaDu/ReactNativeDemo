@@ -14,6 +14,8 @@ import Page3 from '../components/MenuList';
 import LoadedList from '../page/LoadedList'
 import ProfileView from '../page/ProfileView';
 import  ListPage from '../page/ListPage';
+import MainList from '../page/MainList'
+import Test from '../page/TestPage'
 export default class TabBarView extends Component {
     constructor(props){
         super(props)
@@ -30,7 +32,7 @@ export default class TabBarView extends Component {
 
             >
                 <Page1 tabLabel='Tab #1' key={1}/>
-                <Page2 tabLabel='Tab #2' key={2}/>
+                <Test tabLabel='Main' key={2}/>
                 <Page3 tabLabel="Tab #3" key={3}/>
                 <ListPage tabLabel="List" key={4}/>
                 <ProfileView tabLabel="profile"/>

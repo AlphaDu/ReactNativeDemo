@@ -83,7 +83,9 @@ export default class ListViewBasics extends Component {
             .then((data) => console.log(data))
             .catch(err => console.error(err));
     };
-
+    __qrCodeDetected = (event)=>{
+        console.log(event.toString())
+    };
     render () {
         return (
             <View style={{flex: 1,
@@ -103,8 +105,10 @@ export default class ListViewBasics extends Component {
                     </View>
                 </TouchableHighlight>
                 <Camera ref={(cam)=>{this.camera = cam}}
-                        style={{flex: 1,justifyContent: 'flex-end',alignItems: 'center'}}
-                        aspect={Camera.constants.Aspect.fill}/>
+                        style={{flex: 1,justifyContent: 'flex-end',alignItems: 'center' ,height:100,width:300}}
+                        aspect={Camera.constants.Aspect.fill}
+                        onBarCodeRead={this.__qrCodeDetected}
+                   />
                 <Image source={this.state.avatarSource} style={{width:100,height:100}}/>
             </View>
         );
