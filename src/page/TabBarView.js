@@ -6,7 +6,7 @@ import {
     View,
     Text,
 } from 'react-native'
-import ScrollableTabView ,{DefaultTabBar}from 'react-native-scrollable-tab-view';
+import ScrollableTabView ,{DefaultTabBar,ScrollableTabBar}from 'react-native-scrollable-tab-view';
 import TabBar from '../components/TabBar';
 import Page1 from '../page/TestPage1'
 import Page2 from '../page/TestPage2'
@@ -25,10 +25,10 @@ export default class TabBarView extends Component {
         return (
             <ScrollableTabView
                 tabBarPosition='bottom'
-                locked
+
                 scrollWithoutAnimation
                 renderTabBar={
-                    ()=><DefaultTabBar />
+                    ()=><ScrollableTabBar />
                 }
 
             >

@@ -14,7 +14,6 @@ import {
     ScrollView
 } from 'react-native';
 import Constants from '../common/constants';
-
 const IndicatorAnimation = {
     duration: 100,
     create: {

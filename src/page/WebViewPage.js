@@ -20,18 +20,22 @@ export default class WebViewPage extends Component {
 
     componentDidMount () {
         if (this.webview){
-            this.webview.injectJavaScript("indow.postMessage('injected');window.addEventListener('load',function(){window.postMessage('injected');alert('inject');});");
+            this.webview.injectJavaScript("window.postMessage('injected:' + document.cookie);window.addEventListener('load',function(){window.postMessage('injected');alert('inject');});");
         }
     }
-
+    onLoad = ()=>{
+        console.log('onload');
+        this.webview.injectJavaScript("window.postMessage('injected:' + document.cookie);");
+    };
     render () {
         return (<WebView style={{marginTop:20}}
                          source={{uri:'https://www.baidu.com'}}
                          onMessage={(event)=>{
-                             console.log(event)
+                             console.log(event.nativeEvent)
                          }}
                          ref={webview => { this.webview = webview }}
-                         injectedJavaScript="window.postMessage('injected');window.addEventListener('load',function(){document.write('test');window.postMessage('injected');alert('inject');});document.write('test');"/>)
+                         onLoad={this.onLoad}
+                         injectedJavaScript="window.postMessage('injected');window.addEventListener('load',function(){window.postMessage('injected');alert('inject');});"/>)
 
     }
 }

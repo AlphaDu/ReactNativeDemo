@@ -14,7 +14,7 @@ import {
     Alert,
     Modal,
     Animated,
-    ListView
+    ListView,TouchableOpacity
 } from 'react-native'
 import {observer} from 'mobx-react/native'
 import {reaction} from 'mobx'
@@ -22,7 +22,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import dynamicTabStore from '../store/DynamicTabStore'
 const MaxTabNum=10;
 @observer
-export default class ScrollableTabBar extends Component {
+export default class DynamicTabBar extends Component {
     static propType={
         goToPage: React.PropTypes.func,
         activeTab: React.PropTypes.number,
@@ -39,17 +39,28 @@ export default class ScrollableTabBar extends Component {
     addTab=() => {
         dynamicTabStore.append();
     };
+    removePage = (i)=>{
+        if(i != this.props.activeTab)
+        dynamicTabStore.removePage(i);
+        if( i < this.props.activeTab){
+            this.props.goToPage(this.props.activeTab-1);
+        }else{
+            this.props.goToPage(this.props.activeTab);
+        }
+    };
     render () {
         return (
-            <View style={{height:60}}>
+            <View style={{height:35}}>
                 <ScrollView showsHorizontalScrollIndicator={false}
                             horizontal
                             style={{backgroundColor:'#e7f276'}}>
                     {
                         dynamicTabStore.controllers.map((controller, index) => {
-                            return <TabCell label={controller.title} onPress={()=>this.props.goToPage(index)}/>
+                            return <TabCell label={controller.title} onPress={()=>this.props.goToPage(index)} id={index} getIndex={this.removePage} />
                         })
-                    }
+                    }{
+                    this.props.tabs.length <= 9?<AppendCell onPress={this.addTab}/>:null
+                }
                 </ScrollView>
             </View>
         )
@@ -64,22 +75,22 @@ class TabCell extends Component{
 
     render () {
         return (
-            <TouchablaOpacity onPress={this.props.onPress}>
-                <View style={{width:100,marginRight:5,backgroundColor:'#8afc7b'}}>
+            <TouchableOpacity onPress={this.props.onPress} onLongPress={()=>this.props.getIndex(this.props.id)}>
+                <View style={{width:100,height:'100%',marginRight:5,backgroundColor:'#8afc7b',justifyContent:'center',alignItems: 'center',flex:1}}>
                     <Text>{this.props.label}</Text>
                 </View>
-            </TouchablaOpacity>
+            </TouchableOpacity>
         )
     }
 }
 class AppendCell extends Component {
     render () {
         return (
-            <TouchablaOpacity onPress={this.props.onPress}>
-                <View style={{width:50,marginRight:5,backgroundColor:'#a5a5a5'}}>
-                    <Icon name="add"/>
+            <TouchableOpacity onPress={this.props.onPress}>
+                <View style={{width:40,marginRight:5,backgroundColor:'#a5a5a5',justifyContent:'center',alignItems: 'center',flex:1}}>
+                    <Icon name="rocket"/>
                 </View>
-            </TouchablaOpacity>
+            </TouchableOpacity>
         )
     }
 }
