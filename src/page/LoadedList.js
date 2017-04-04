@@ -23,6 +23,13 @@ export default class LoadedList extends Component {
                     <LoadedCell title="TITLE IS TEST DSA SD DSDASDSADASDA" author="Zhang San" date="2016"/>
                     <LoadedCell title="TITLE2" author="Zhang San" date="2016"/>
                     <LoadedCell title="TITLE3" author="Zhang San" date="2016"/>
+                    <LoadedCell title="TITLE3" author="Zhang San" date="2016"/>
+                    <LoadedCell title="TITLE3" author="Zhang San" date="2016"/>
+                    <LoadedCell title="TITLE3" author="Zhang San" date="2016"/>
+                    <LoadedCell title="TITLE3" author="Zhang San" date="2016"/>
+                    <LoadedCell title="TITLE3" author="Zhang San" date="2016"/>
+                    <LoadedCell title="TITLE3" author="Zhang San" date="2016"/>
+                    <LoadedCell title="TITLE3" author="Zhang San" date="2016"/>
                 </ScrollView>
             </View>
 

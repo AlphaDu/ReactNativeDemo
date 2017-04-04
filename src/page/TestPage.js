@@ -33,7 +33,7 @@ export default class TestPage extends Component{
                     {
                         dynamicTabStore.controllers.map((controller,index)=>{
                             let Component = controller.component;
-                            return <Component tabLabel={controller.title}/>
+                            return <Component tabLabel={controller.title} tabKey={controller.tabKey}/>
                         })
                     }
                 </ScrollableTabView>

@@ -1,29 +1,61 @@
 import {observable, action, reaction, computed} from 'mobx'
 import CONFIG from '../config.js'
 import REQUEST_HEADER from '../common/HttpRequestHeader.js'
-const loginUrl='voteLogin.json';
-const LoginRefer='http://210.13.121.74:50001/vote/voteLogin.htm';
+import spider from '../common/spider.js'
+const loginUrl = 'voteLogin.json';
+const LoginRefer = 'http://210.13.121.74:50001/vote/voteLogin.htm';
+const mainpage = ''
 class UserStore {
-    @observable user=null;
-    @observable cookie='';
-    @observable isRefreshing=false;
-    @observable lastlLogineduser=null;
-    @observable errorMsg='';
-    @action sendLoginRequest=async (userName, password) => {
+    @observable username = '';
+    @observable password = '';
+    @observable cookie = '';
+    @observable isFetching = false;
+    @observable isLegal = false;
+    @observable isFetching = false;
+    @observable errorMsg = '';
+
+    @action isLegalCheck = async() =>{
         try {
-            const response=await this.fetchFromServer(userName, password);
-            response.json();
-        } catch (error) {
-            this.errorMsg=error
+            let html = await this.fetchHtmlFromUrl(mainpage);
+            sp = spider.comicListSpider();
+            if(!sp.isLegal){
+                errorMsg = '';
+            }else{
+                isLegal = false;
+            }
+        } catch (err) {
+            errorMsg = err.toString();
         }
     };
 
-    @action loginOut=() => {
-        this.user=null;
-        this.cookie='';
+    @action setCookie(cookie) {
+    this.cookie = cookie;
+    }
+
+    @action login() {
+
+    }
+
+    fetchHtmlFromUrl = () => {
+
     };
 
-    fetchFromServer (username, password) {
+
+    @action sendLoginRequest = async(userName, password) => {
+        try {
+            const response = await this.fetchFromServer(userName, password);
+            response.json();
+        } catch (error) {
+            this.errorMsg = error
+        }
+    };
+
+    @action loginOut = () => {
+        this.user = null;
+        this.cookie = '';
+    };
+
+    fetchFromServer(username, password) {
         console.log(CONFIG);
         console.log(Object.assign({}, REQUEST_HEADER, {Referer: LoginRefer}));
         fetch(CONFIG.host + loginUrl, {
@@ -39,10 +71,10 @@ class UserStore {
             .catch(error => console.log(error))
     }
 
-    @computed  get isFetching () {
+    @computed  get isFetching() {
 
     }
 }
 
-const userStore=new UserStore();
+const userStore = new UserStore();
 export default  userStore;

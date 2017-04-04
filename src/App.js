@@ -4,11 +4,15 @@ import {Provider, connect} from 'react-redux'
 import reducers from './reducers/index.js'
 import Mainpage from './page/MainPage.js'
 import MenuList from './components/MenuList'
+import {Navigator,Platform,StatusBar} from 'react-native'
+
 class App extends Component {
     constructor(props) {
         super(props);
+
     }
     render(){
+
         if(/*this.props.user == null || !this.props.user*/null){
             return <LoginUI dispatch={this.props.dispatch}/>
         }else{
@@ -16,6 +20,6 @@ class App extends Component {
             return <Mainpage/>
         }
     }
-}
+};
 
 export default App;

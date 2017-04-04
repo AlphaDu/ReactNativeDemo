@@ -17,16 +17,35 @@ import {
     ListView
 } from 'react-native'
 let model = ['a','b','c','e','f','g','h'];
-
+import ListPager from '../components/ListPager'
+import {observer} from 'mobx-react/native'
+import {reaction} from 'mobx'
+import ComicListStore from '../mobx/ComicListStore'
+@observer
 class ListPages extends Component{
     constructor(props){
         super(props);
+
         this.state = {
             dataSource: new ListView.DataSource({
                 rowHasChanged: (row1, row2) => row1 !== row2,
             }),
             text:''
-        }
+        };
+
+        // {
+        //      currenPage
+        //      pageInfo
+        //      List
+        //
+
+        listdata = {
+            currentPage:0,
+            pageInfo:10234,
+            List:[]
+        };
+
+
     }
     _renderRow = (data)=>{
         return (
@@ -53,6 +72,9 @@ class ListPages extends Component{
     render(){
         return (
             <View style={{flex:1,flexDirection:'column'}}>
+                <View style={{flex:0.5,alignItems: 'center'}}>
+                    <ListPager />
+                </View>
                 <View style={{flex:9}}>
                     <ListView
                         dataSource={this.state.dataSource.cloneWithRows(model.slice(0))}
@@ -60,7 +82,7 @@ class ListPages extends Component{
                         onEndReachedThreshold={10}
                         onEndReached={this._hasNext}/>
                 </View>
-                <View style={{flex:1,flexDirection:'row'}}>
+                <View style={{flex:0.5,flexDirection:'row'}}>
                     <TextInput style={{flex:7,width:200}} onChangeText={(text)=>this.setState({text})} />
                     <Button title="DD" style={{flex:2,width:100}} onPress={()=>this.appendList(this.state.text)}/>
                 </View>

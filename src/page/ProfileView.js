@@ -6,13 +6,14 @@ import {
     TouchableOpacity,StyleSheet,
     Dimensions, Platform, PixelRatio,ScrollView
 } from 'react-native'
+import ListPager from '../components/ListPager'
 export default class ProfileView extends Component {
     constructor(props) {
         super(props)
     }
     render(){
         return (
-            <View style={{flex:1,backgorundColor:'#f5f5f5'}}>
+            <View style={{flex:1,backgroundColor:'#f5f5f5'}}>
                 <HeaderView/>
             </View>
         );
@@ -55,6 +56,7 @@ const HeaderView = ({settingAction, loginAction}) => {
                     <Text style={{color: 'white'}}>点击登录</Text>
                 </TouchableOpacity>
             </View>
+            <ListPager/>
         </ScrollView>
     )
 };

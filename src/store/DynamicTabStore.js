@@ -4,24 +4,26 @@ import TestPage2 from '../page/TestPage2'
 import TestPage1 from '../page/TestPage1'
 import WebViewPage from '../page/WebViewPage'
 import LoadedList from '../page/LoadedList'
+import ListPage from '../page/ListPage'
 import {Map} from 'immutable';
-const defaultController = {id:0,title:'MAINPAGE',component:ProfileView};
+const defaultController = {id:0,title:'MAINPAGE',component:ProfileView,tabKey:0};
 const testPages = [
-    {title:'MAINPAGE',component:ProfileView},
-    {title:'PAGE1',component:TestPage1},
-    {title:'PAGE2',component:TestPage2},
-    {title:'WEBVIEW',component:WebViewPage},
-    {title:'LOAD',component:LoadedList}
+    {title:'MAINPAGE',component:ProfileView,tabKey:1},
+    {title:'PAGE1',component:TestPage1,tabKey:2},
+    {title:'List',component:ListPage,tabKey:3},
+    {title:'WEBVIEW',component:WebViewPage,tabKey:4},
+    {title:'LOAD',component:LoadedList,tabKey:5}
 ];
 class  DynamicTabStore{
-    @observable pageid = 0;
+
     @observable controllers = testPages;
+    @observable tabKey = 5;
     @action close = (i) =>{
 
     };
     @action append =() =>{
-        this.pageid ++;
-        this.controllers.push({id:this.pageid,...defaultController});
+        this.tabKey ++;
+        this.controllers.push({id:this.pageid,...defaultController,tabKey:this.tabKey});
 
     };
     @action removePage = (index) => {

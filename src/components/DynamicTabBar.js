@@ -26,7 +26,7 @@ export default class DynamicTabBar extends Component {
     static propType={
         goToPage: React.PropTypes.func,
         activeTab: React.PropTypes.number,
-        tabs: React.PropTypes.array,
+        tabs: React.PropTypes.array.required,
         tabNames: React.PropTypes.array
     };
 
@@ -42,11 +42,7 @@ export default class DynamicTabBar extends Component {
     removePage = (i)=>{
         if(i != this.props.activeTab)
         dynamicTabStore.removePage(i);
-        if( i < this.props.activeTab){
-            this.props.goToPage(this.props.activeTab-1);
-        }else{
-            this.props.goToPage(this.props.activeTab);
-        }
+
     };
     render () {
         return (
@@ -56,7 +52,7 @@ export default class DynamicTabBar extends Component {
                             style={{backgroundColor:'#e7f276'}}>
                     {
                         dynamicTabStore.controllers.map((controller, index) => {
-                            return <TabCell label={controller.title} onPress={()=>this.props.goToPage(index)} id={index} getIndex={this.removePage} />
+                            return <TabCell label={controller.title} onPress={()=>this.props.goToPage(index)} id={index} tabKey={controller.tabKey} onLongPress={this.removePage} />
                         })
                     }{
                     this.props.tabs.length <= 9?<AppendCell onPress={this.addTab}/>:null
@@ -75,7 +71,7 @@ class TabCell extends Component{
 
     render () {
         return (
-            <TouchableOpacity onPress={this.props.onPress} onLongPress={()=>this.props.getIndex(this.props.id)}>
+            <TouchableOpacity onPress={this.props.onPress} onLongPress={()=>this.props.onLongPress(this.props.id)}>
                 <View style={{width:100,height:'100%',marginRight:5,backgroundColor:'#8afc7b',justifyContent:'center',alignItems: 'center',flex:1}}>
                     <Text>{this.props.label}</Text>
                 </View>
