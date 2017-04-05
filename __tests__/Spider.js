@@ -24,7 +24,11 @@ function coverUrlParser(context) {
     return "https://exhentai.org/" + suffix
 }
 
-
+function  getTotalPage (context){
+    var regrex  = /Jump\sto\spage:\s\(1-(\d+)\)/g ;
+    let s =  regrex.exec(context);
+    return s[1];
+}
 
 spiders.parseComicList = function (context) {
     let commonlistdata = {
@@ -39,6 +43,7 @@ spiders.parseComicList = function (context) {
     commonlistdata.total = $('p[class="ip"]').text();
     //currentpage
     let tmpPage = $('td[class="ptds"]').text() ;
+    commonlistdata.total = getTotalPage(context);
     commonlistdata.currentPage = tmpPage.slice(tmpPage.length/2) -1;
     $('[class*="gtr"]').each(function (i, ele) {
         console.log(i);
@@ -53,15 +58,16 @@ spiders.parseComicList = function (context) {
         let cover = coverUrlParser(ele);
 
         commonlistdata.list.push({
-            type: type,
+            cate: type,
             date: date,
-            name: name,
+            title: name,
             uploader: uploader,
             cover: cover
         })
     });
+
     console.log(commonlistdata);
-    return commonlistdata
+
 };
 
 fs.readFile("./test.html","utf-8",(err,fd)=>spiders.parseComicList(fd));

@@ -22,7 +22,7 @@ class ComicListStore {
             this.isFetching = true;
             let html = await this._fetchDataFromUrl(host);
             this.isFetching = false;
-            this.isConnect = true;
+            this.isConnect = true;;
             let result = spider.parseComicList();
             this.isLegal = result.isLegal;
             if(!isLegal)

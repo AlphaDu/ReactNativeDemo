@@ -67,7 +67,7 @@ spider.parseComicList = function (context) {
 
         let date = publishDateParser(ele);
 
-        let name = nameParser(ele);
+        let title = nameParser(ele);
 
         let uploader = uploaderParser(ele);
 
@@ -76,7 +76,7 @@ spider.parseComicList = function (context) {
         commonlistdata.list.push({
             type: type,
             date: date,
-            name: name,
+            title: title,
             uploader: uploader,
             cover: cover
         })

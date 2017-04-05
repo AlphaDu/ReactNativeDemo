@@ -18,6 +18,8 @@ import MainList from '../page/MainList'
 import Test from '../page/TestPage'
 import WebViewPage from '../page/WebViewPage'
 import DetailPage from '../page/ComicDetailPage'
+import ComicListPage from '../page/ComicListPage'
+
 export default class TabBarView extends Component {
     constructor(props){
         super(props)
@@ -25,7 +27,7 @@ export default class TabBarView extends Component {
     render(){
         return (
             <ScrollableTabView
-                tabBarPosition='bottom'
+                tabBarPosition='top'
                 locked
                 scrollWithoutAnimation
                 renderTabBar={
@@ -33,9 +35,8 @@ export default class TabBarView extends Component {
                 }
             >
                 <DetailPage tabLabel="detal" key={6}/>
-
+                <ComicListPage tabLabel="clist" key={1}/>
                 <Test tabLabel='Main' key={2}/>
-                <ProfileView tabLabel="profile" key={6}/>
 
                 <Page3 tabLabel="Tab #3" key={3}/>
                 <WebViewPage tabLabel="web" ley={5}/>

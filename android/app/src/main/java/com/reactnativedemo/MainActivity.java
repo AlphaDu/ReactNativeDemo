@@ -1,6 +1,8 @@
 package com.reactnativedemo;
 
 import com.facebook.react.ReactActivity;
+import com.psykar.cookiemanager.CookieManagerPackage;
+import im.shimo.react.cookie.CookieManagerPackage;
 
 public class MainActivity extends ReactActivity {
 

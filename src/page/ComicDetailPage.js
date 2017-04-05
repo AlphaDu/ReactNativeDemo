@@ -14,7 +14,8 @@ import {
     Animated,
     ActivityIndicator,
     Button,
-    TouchableHighlight
+    TouchableHighligh,
+    ImageEditor
 } from 'react-native'
 import GridView from '../components/GridView'
 import ComicDetailStore from '../mobx/ComicDetailStore'
@@ -23,18 +24,51 @@ let mockdatas = [
     "https://ehgt.org/m/001047/1047307-01.jpg", "https://ehgt.org/m/001047/1047307-01.jpg", "https://ehgt.org/m/001047/1047307-01.jpg",
     "https://ehgt.org/m/001047/1047307-01.jpg", "https://ehgt.org/m/001047/1047307-01.jpg",
 ];
+let preview = ["https://ehgt.org/m/001046/1046542-00.jpg"];
+cropData = {
+    size:{
+        width:100,
+        height:140
+    },
+    displaySize:{
+        width:100,
+        height:140
+    },
+    offset:{
+        x:0,
+        y:0
+    }
+
+
+};
 @observer
 export default class ComicDetailPage extends Component {
     constructor(props) {
         super(props);
-
+        this.state = {
+            urls:[]
+        }
     }
 
     renderItem = (url) => (
         <ImageCell url={url}/>
     );
 
+    onSuccess = (str) =>{
+        console.log("success");
+        this.setState({
+           urls:[str]
+        });
+
+    };
+    onFail = (err)=>{
+
+    };
+    componentDidMount (){
+        ImageEditor.cropImage("https://ehgt.org/m/001046/1046542-00.jpg",cropData,this.onSuccess,this.onFail);
+    }
     render() {
+
         return (
             <ScrollView>
                 <Header title="title"
@@ -44,7 +78,7 @@ export default class ComicDetailPage extends Component {
                 <View>
                     <Text>wocaoßßß</Text>
                     <GridView
-                        items={mockdatas}
+                        items={this.state.urls}
                         itemsPerRow={3}
                         renderItem={this.renderItem}
                         style={{backgroundColor: '#F5FCFF'}}/>
