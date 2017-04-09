@@ -18,6 +18,9 @@ import MainList from '../page/MainList'
 import Test from '../page/TestPage'
 import WebViewPage from '../page/WebViewPage'
 export default class TabBarView extends Component {
+    static navigationOptions = {
+        title:'Mainpage'
+    };
     constructor(props){
         super(props)
     }

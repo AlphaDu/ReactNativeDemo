@@ -6,8 +6,14 @@ import {Provider} from 'react-redux'
 import thunk from 'redux-thunk'
 import loginReducer from './reducers/login.js'
 import LoginUI from './components/Login.js'
+import TabbarView from './page/TabBarView'
+import {StackNavigator} from 'react-navigation'
 import {persistStore, autoRehydrate} from 'redux-persist'
-export default class Root extends Component {
+const appNavigator = StackNavigator({
+    Login:{screen:LoginUI},
+    Mainpage:{screen:TabbarView},
+});
+class Root extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -29,3 +35,4 @@ export default class Root extends Component {
         )
     }
 }
+export default appNavigator;

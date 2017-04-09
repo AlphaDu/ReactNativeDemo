@@ -4,6 +4,13 @@ import {Provider, connect} from 'react-redux'
 import reducers from './reducers/index.js'
 import Mainpage from './page/MainPage.js'
 import MenuList from './components/MenuList'
+import TabbarView from './page/TabBarView'
+import {StackNavigator} from 'react-navigation'
+
+const appNavigator = StackNavigator({
+    Login:{screen:LoginUI},
+    TabView:{screen:TabbarView}
+});
 class App extends Component {
     constructor(props) {
         super(props);
@@ -18,4 +25,4 @@ class App extends Component {
     }
 }
 
-export default App;
+export default appNavigator;

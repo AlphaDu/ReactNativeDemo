@@ -16,6 +16,7 @@ class LoginUI extends Component {
 
     constructor (props) {
         super(props);
+        this.navigate=this.props.navigation.navigate;
     }
 
     getLastLogonUser () {
@@ -25,6 +26,10 @@ class LoginUI extends Component {
     componentDidMount () {
 
     }
+
+    forwardToMainpage=() => {
+        this.navigate('Mainpage', {param1: 'test'})
+    };
 
     render () {
         let messageStyle=style.normal;
@@ -70,9 +75,10 @@ class LoginUI extends Component {
                            }}
                 />
                 <Button onPress={
-                    () => {
-                        userStore.sendLoginRequest(this.state.username,this.state.password)
-                    }
+                 //   () => {
+                  //      userStore.sendLoginRequest(this.state.username,this.state.password)
+                   // }
+                 ()=>this.forwardToMainpage()
                 } title="      登 录      " style={style.loginButton} color="#1ABC9C"/>
                 <Text style={messageStyle}>{message}</Text>
             </View>
