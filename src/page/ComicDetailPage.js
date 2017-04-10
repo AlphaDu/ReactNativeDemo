@@ -31,11 +31,11 @@ cropData = {
         height:140
     },
     displaySize:{
-        width:100,
+        width:200,
         height:140
     },
     offset:{
-        x:0,
+        x:100,
         y:0
     }
 
