@@ -18,8 +18,8 @@ const res = {
     tags: {},
     links: [],
     combinedPreviews: [],
-    page:1,
-    total_page:0
+    page: 1,
+    total_page: 0
 };
 let parseComicDetail = function () {
     fs.readFile('./testdetail.html', 'utf-8', (err, fd) => {
@@ -29,6 +29,8 @@ let parseComicDetail = function () {
         console.log(parser$cover(fd));
         parser$links(fd);
         parser$rating(fd);
+        parser$page(fd);
+        parser$total_page(fd);
     });
 
 };
@@ -52,11 +54,25 @@ function parser$links(context) {
     });
     return links;
 }
-function parser$rating(context){
-    let inner = cheerio('[id="rating_label"]',context).text();
+function parser$rating(context) {
+    let inner = cheerio('[id="rating_label"]', context).text();
     return inner.split(" ")[1];
 }
-function parser$page(context){
-
+function parser$page(context) {
+    let subContext = cheerio('td[class="ptds"]', context).html();
+    return cheerio('a', subContext).text();
 }
+function parser$total_page(context) {
+    let total = 0;
+    let subContext = cheerio('table[class="ptb"]', context).html();
+    cheerio('a', subContext).each((index, ele) => {
+        let inner = cheerio(ele).text();
+        if(!isNaN(parseInt(inner))) {
+            total ++;
+        }
+    });
+    console.log("total" + total);
+    return total;
+}
+
 parseComicDetail();
