@@ -21,20 +21,11 @@ const res = {
     page: 1,
     total_page: 0
 };
-let parseComicDetail = function () {
-    fs.readFile('./testdetail.html', 'utf-8', (err, fd) => {
-        let $ = cheerio.load(fd);
-        console.log(parser$title(fd));
-        console.log(parser$title_jpn(fd));
-        console.log(parser$cover(fd));
-        parser$links(fd);
-        parser$rating(fd);
-        parser$page(fd);
-        parser$total_page(fd);
-    });
+function load(context){
+    let data ={};
+    data.title =parser$title(context);
 
-};
-
+}
 function parser$title(context) {
     return cheerio('h1[id="gn"]', context).text();
 }
@@ -74,5 +65,36 @@ function parser$total_page(context) {
     console.log("total" + total);
     return total;
 }
+function parser$g_id(context){
+    let regrex = /var\sgid\s=\s([a-z0-9]+);/g;
+    let res = regrex.exec(context);
+    return res[1]
 
+}
+function parser$g_token(context){
+    let regrex = /var\stoken\s=\s"([a-z0-9]+)";/g;
+    let res = regrex.exec(context);
+    return res[1]
+}
+function parser$tags(context){
+    let subContext = cheerio('div[id="taglist"]',context).html();
+    let tags = {};
+    cheerio('tr',subContext).each((index,element)=>{
+        let label = cheerio('td[class="tc"]',element).text();
+        let valueContext = cheerio('td:not([class])',element).html();
+        let values = [];
+        cheerio('a',valueContext).each((index,element)=>{
+            values.push(cheerio(element).text().replace(/[\n\s]+/," "));
+        });
+        tags[label] = values;
+    });
+    return tags;
+}
+function parseComicDetail(){
+    fs.readFile('./testdetail.html', "utf-8", (err, fd) => {
+        console.log(parser$g_id(fd));
+        console.log(parser$g_token(fd));
+    });
+
+}
 parseComicDetail();

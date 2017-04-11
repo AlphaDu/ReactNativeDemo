@@ -18,6 +18,19 @@ let model = ['a', 'b', 'c', 'e', 'f', 'g', 'h'];
 //     // `res` will be true or false depending on success.
 //     console.log("Set cookie", res);
 // });
+CookieManager.set({
+    name: 'cookie',
+    value: 'ipb_member_id=2390332; ipb_pass_hash=e9532dec36afd6d54eafa8ffb2e14168; igneous=aacb6fb36; s=1f6b1f494; uconfig=dm_t; lv=1491833126-1491909096',
+    domain: 'exhentai.org',
+    origin: 'https://exhentai.org',
+    path: '/',
+    version: '1',
+    expiration: '2017-07-30T12:30:00.00-05:00'
+}, (err, res) => {
+    console.log('cookie set!');
+    console.log(err);
+    console.log(res);
+});
 CookieManager.get('https://exhentai.org/', (err, res) => {
     console.log('Got cookies for url', res);
     // Outputs 'user_session=abcdefg; path=/;'

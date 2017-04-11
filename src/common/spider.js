@@ -2,7 +2,7 @@
  *
  * Created by AlphaDu on 2017/3/31.
  */
-
+import cheerio from 'cheerio'
 const spider = {};
 function typeParser(context) {
     return cheerio('img[class="ic"]', context).attr("alt");
@@ -25,9 +25,7 @@ function coverUrlParser(context) {
     return "https://exhentai.org/" + suffix
 }
 
-function listInfoParser() {
 
-}
 let commiclistdata = {};
 function typeParser(context) {
     return cheerio('img[class="ic"]', context).attr("alt");
