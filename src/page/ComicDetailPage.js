@@ -20,6 +20,7 @@ import {
 import GridView from '../components/GridView'
 import ComicDetailStore from '../mobx/ComicDetailStore'
 import {observer} from 'mobx-react/native'
+import {reaction} from 'mobx'
 let mockdatas = [
     "https://ehgt.org/m/001047/1047307-01.jpg", "https://ehgt.org/m/001047/1047307-01.jpg", "https://ehgt.org/m/001047/1047307-01.jpg",
     "https://ehgt.org/m/001047/1047307-01.jpg", "https://ehgt.org/m/001047/1047307-01.jpg",
@@ -41,17 +42,18 @@ cropData = {
 
 
 };
+const home="https://exhentai.org/g/1050309/fcce0646da/";
 @observer
 export default class ComicDetailPage extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            urls:[]
-        }
+        this.comicDetailStore = new ComicDetailStore(this.props.url);
     }
-
-    renderItem = (url) => (
-        <ImageCell url={url}/>
+    static defaultProps ={
+        url:home
+    };
+    renderItem = (cellData) => (
+        <ImageCell  {...cellData}/>
     );
 
     onSuccess = (str) =>{
@@ -64,21 +66,22 @@ export default class ComicDetailPage extends Component {
     onFail = (err)=>{
 
     };
-    componentDidMount (){
+    componentDidMount(){
         ImageEditor.cropImage("https://ehgt.org/m/001046/1046542-00.jpg",cropData,this.onSuccess,this.onFail);
+
     }
     render() {
+        const {title,title_jpn,cover,links,previews,tags,isFetching,cellData} =  this.comicDetailStore;
 
         return (
             <ScrollView>
-                <Header title="title"
-                        author="author"
-                        image="https://ehgt.org/m/001047/1047307-01.jpg" uploaderTime="20170204"/>
+                <Header title={title}
+                        image={cover} uploaderTime="20170204" tags />
 
                 <View>
                     <Text>wocaoßßß</Text>
                     <GridView
-                        items={this.state.urls}
+                        items={cellData}
                         itemsPerRow={3}
                         renderItem={this.renderItem}
                         style={{backgroundColor: '#F5FCFF'}}/>
@@ -113,7 +116,7 @@ const ImageCell = props => {
         justifyContent: 'space-around'}}>
             <TouchableOpacity>
                 <Image style={{width:80,height:120,margin:3}}
-                       source={props.url===undefined?require('../resource/img_timeline_default.png'):{url:props.url}}/>
+                       source={{url:props.preview}}/>
             </TouchableOpacity>
         </View>
 

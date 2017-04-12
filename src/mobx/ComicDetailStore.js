@@ -16,11 +16,10 @@ const cropData = {
         height: 140
     }
 };
-class ComicDetailStore {
+export default class ComicDetailStore {
     @observable title = "";
     @observable title_jpn = "";
-    @observable cover = ""
-    @observable author = "";
+    @observable cover = "";
     @observable links = "";
     @observable rating = 0;
     @observable page = 0;
@@ -33,13 +32,14 @@ class ComicDetailStore {
     @observable g_token = '';
     @observable tags = {};
     @observable isFetching = false;
+
     constructor(pageUrl) {
         this.loadDataFromUrl(pageUrl);
     }
-    @action loadDataFromUrl = async(url)=>{
+
+    @action loadDataFromUrl = async(url) => {
         let html = await this._fetchHtmlFromUrl(url);
-        runInAction(()=>{
-            //TODO
+        runInAction(() => {
             let data = load(html);
             this.title = data.tite;
             this.title_jpn = data.title_jpn;
@@ -51,16 +51,37 @@ class ComicDetailStore {
             this.tags = data.tags;
             this.g_id = data.g_id;
             this.g_token = data.g_token;
+            this.combinedUrlToPreviewsUrl(data.merged_imgs);
+
         });
+
+
     };
 
-    combinedUrlToPreviewsUrl(urls) {
+    @action combinedUrlToPreviewsUrl = (urls) => {
+        let res = [];
         urls.forEach((url) => {
-            this.previews.concat(this.cutPreview(url));
+            let arr = this.cutPreview(url);
+            res.concat(arr);
         });
+        console.log(res);
+        return res;
+    };
+
+    @computed
+    get cellData() {
+        let datas = [];
+        for (let i = 0; i < this.links.length; i++) {
+            datas.push({
+                preview: this.previews[i],
+                link: this.links[i]
+            })
+        }
+        return datas
     }
 
-    getNum() {
+    @computed
+    get Num() {
         return this.previews.length;
     }
 
@@ -69,26 +90,28 @@ class ComicDetailStore {
             const URL = url;
             fetch(URL).then(response => {
                 if (response.status == 200) {
-                    return response.json();
+                    return response.text();
                 } else {
                     reject('error:' + response.status);
                 }
-            }).then(htmlData =>{
-                if(htmlData){
+            }).then(htmlData => {
+                if (htmlData) {
                     resolve(htmlData);
-                }else{
+                } else {
                     reject('获取页面失败');
                 }
-            }).catch(error=>{
+            }).catch(error => {
                 reject('error');
             });
         });
     }
 
-    cutPreview(url) {
+    @action cutPreview(url) {
         const blockUrls = [];
         const onSuccess = (str) => {
-            blockUrls.push(str)
+            runInAction(()=>{
+                this.previews.push(str);
+            })
         };
         const onError = (err) => {
             console.log(err)
@@ -96,7 +119,7 @@ class ComicDetailStore {
         Image.getSize(url, (width, height) => {
             let blockNum = parseInt(width / 100);
             for (let i = 0; i < blockNum; i++) {
-                ImageEditor.cropImage(url, {offset: {x: 100 * i, y: 0}, ...cropData},onSuccess,onError);
+                ImageEditor.cropImage(url, {offset: {x: 100 * i, y: 0}, ...cropData}, onSuccess, onError);
             }
         });
         return blockUrls;

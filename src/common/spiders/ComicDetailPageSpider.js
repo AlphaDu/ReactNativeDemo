@@ -14,6 +14,7 @@ export default function load(context){
     data.tags = parser$tags(context)||{};
     data.g_id = parser$g_id(context)||'';
     data.g_token =parser$g_token(context)||'';
+    data.merged_imgs=parser$merged_imgs(context)||[];
     return data;
 }
 function parser$title(context) {
@@ -55,6 +56,26 @@ function parser$total_page(context) {
     console.log("total" + total);
     return total;
 }
+function parser$merged_imgs(context){
+    let subCtx = $('div[id="gdt"]',context).html();
+    let merges = [];
+    $('div:not([class])',subCtx).each((index,element)=>{
+        let str = $(element).attr('style');
+        let regrex = /url\((.+)\)/;
+        let res =  regrex.exec(str)[1];
+        let isContain = false;
+        for(let i=0;i <merges.length;i ++){
+            if(merges[i] == res){
+                isContain = true;
+                break;
+            }
+        }
+        if(!isContain){
+            merges.push(res);
+        }
+    });
+    return merges
+}
 function parser$tags(context){
     let subContext = $('div[id="taglist"]',context).html();
     let tags = {};
@@ -70,7 +91,7 @@ function parser$tags(context){
     return tags;
 }
 function parser$g_id(context){
-    let regrex = /var\sgid\s=\s"([a-z0-9]+)";/;
+    let regrex = /var\sgid\s=\s([a-z0-9]+);/;
     let res = regrex.exec(context);
     return res[1]
 
