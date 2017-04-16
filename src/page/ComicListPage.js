@@ -12,15 +12,19 @@ import {
 } from 'react-native'
 import CookieManager from 'react-native-cookies'
 import ListPager from '../components/ListPager'
+import {observer} from 'mobx-react/native'
 import mockdata from '../mock/comiclist';
 let model = ['a', 'b', 'c', 'e', 'f', 'g', 'h'];
 // CookieManager.setFromResponse('https://exhentai.org/', 'ipb_member_id=2390332; ipb_pass_hash=e9532dec36afd6d54eafa8ffb2e14168; igneous=aacb6fb36; s=1f6b1f494; uconfig=dm_t; lv=1491307778-1491735249', (res) => {
 //     // `res` will be true or false depending on success.
 //     console.log("Set cookie", res);
 // });
+
+import ComicListStore from '../mobx/ComicListStore';
+
 CookieManager.set({
     name: 'cookie',
-    value: 'ipb_member_id=2390332; ipb_pass_hash=e9532dec36afd6d54eafa8ffb2e14168; igneous=aacb6fb36; s=1f6b1f494; uconfig=dm_t; lv=1491833126-1491909096',
+    value: 'ipb_member_id=2390332; ipb_pass_hash=e9532dec36afd6d54eafa8ffb2e14168; igneous=aacb6fb36; s=1f6b1f494; uconfig=dm_l; lv=1491833126-1491909096',
     domain: 'exhentai.org',
     origin: 'https://exhentai.org',
     path: '/',
@@ -35,10 +39,12 @@ CookieManager.get('https://exhentai.org/', (err, res) => {
     console.log('Got cookies for url', res);
     // Outputs 'user_session=abcdefg; path=/;'
 });
-
+@observer
 export default class ComicListPage extends Component {
     constructor(props) {
         super(props);
+        this.store = new ComicListStore("https://exhentai.org/?inline_set=dm_l");
+        this.store.load('https://exhentai.org/?inline_set=dm_l');
         this.state = {
             dataSource: new ListView.DataSource({
                 rowHasChanged: (row1, row2) => row1 !== row2,
@@ -55,23 +61,20 @@ export default class ComicListPage extends Component {
     goBack = () => {
 
     };
-    goFoward = () => {
-
-    };
-
     render() {
         return (
             <View style={{flex:1,flexDirection:'column'}}>
                 <View style={{flex:0.5,alignItems: 'center'}}>
-                    <ListPager />
+                    <ListPager goBack={()=>this.store.goBack()} goFoward={()=>this.store.goFoward()} />
                 </View>
                 <View style={{flex:9}}>
                     <ListView
-                        dataSource={this.state.dataSource.cloneWithRows(mockdata.list.slice(0))}
+                        dataSource={this.state.dataSource.cloneWithRows(this.store.comiclist.slice(0))}
                         renderRow={this._renderRow}
                         onEndReachedThreshold={10}
                         onEndReached={this._hasNext}/>
                 </View>
+                <Text>{this.store.total}</Text>
             </View>
         )
     };

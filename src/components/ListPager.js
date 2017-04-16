@@ -28,7 +28,7 @@ export default class Pager extends Component {
     render() {
         return (
             <View style={{flex:1,flexDirection:'row',height:27,backgroundColor:'#AE837E'}}>
-                <TouchableOpacity style={{justifyContent:'center',alignItems: 'center',width:20}} onPress={this.props.goBack}>
+                <TouchableOpacity style={{justifyContent:'center',alignItems: 'center',width:20}} onPress={()=>this.props.goBack()}>
                     <Icon name="caret-left" size={30}/>
                 </TouchableOpacity>
                 <TextInput style={{height:25,fontSize:25,padding:0,marginTop:10}}
@@ -36,7 +36,7 @@ export default class Pager extends Component {
                                this.props.goSkip(event.nativeEvent.text)
                            }}/>
                 <Text style={{height:30,fontSize:25}}>{"/" + this.props.totalPage}</Text>
-                <TouchableOpacity style={{justifyContent:'center',alignItems: 'center',width:20}} onPress={this.props.gpFoward}>
+                <TouchableOpacity style={{justifyContent:'center',alignItems: 'center',width:20}} onPress={()=>this.props.goFoward()}>
                     <Icon name="caret-right" size={30}/>
                 </TouchableOpacity>
             </View>

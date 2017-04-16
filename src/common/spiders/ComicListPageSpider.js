@@ -4,22 +4,22 @@
  */
 import cheerio from 'cheerio'
 const spider = {};
-function typeParser(context) {
+function parser$type(context) {
     return cheerio('img[class="ic"]', context).attr("alt");
 }
-function publishDateParser(context) {
+function parser$publishDate(context) {
     return cheerio('[class="itd"]', ele).html();
 }
-function nameParser(context) {
+function parser$name(context) {
     return cheerio('a[href*="https://exhentai.org/g/"]', ele).text();
 }
-function levelParser(context) {
+function parser$level(context) {
 
 }
-function uploaderParser(context) {
+function parser$uploader(context) {
     return cheerio('a[href*=uploader]', context).text();
 }
-function coverUrlParser(context) {
+function parser$coverUrl(context) {
     let innertxt = cheerio('div[class="it2"]', context).text();
     let suffix = innertxt.split('~')[2];
     return "https://exhentai.org/" + suffix
@@ -27,32 +27,26 @@ function coverUrlParser(context) {
 
 
 let commiclistdata = {};
-function typeParser(context) {
+function parser$type(context) {
     return cheerio('img[class="ic"]', context).attr("alt");
 }
-function publishDateParser(context) {
+function parser$publishDate(context) {
     return cheerio('[class="itd"]', context).html();
 }
-function nameParser(context) {
+function parser$name(context) {
     return cheerio('a[href*="https://exhentai.org/g/"]', context).text();
 }
 
-function uploaderParser(context) {
-    return cheerio('a[href*="uploader"]', context).text();
+function parser$uploader(context) {
+    return cheerio('a[href*=uploader]', context).text();
 }
-function coverUrlParser(context) {
+function parser$coverUrl(context) {
     let innertxt = cheerio('div[class="it2"]', context).text();
     let suffix = innertxt.split('~')[2];
     return "https://exhentai.org/" + suffix
 }
-function parser$current_page(context){
-    let subContext = cheerio('td[class="ptds"]',context).html();
-    let res = cheerio('a[href*="exhentai"]',subContext).text();
-    return res - 1;
-}
 spider.parseComicList = function (context) {
     let commonlistdata = {
-        isLegal: false,
         currentPage:0,
         total:0,
         list: [],
@@ -63,19 +57,18 @@ spider.parseComicList = function (context) {
     commonlistdata.total = $('p[class="ip"]').text();
     //currentpage
     let tmpPage = $('td[class="ptds"]').text() ;
-    commonlistdata.currentPage = parser$current_page(context);
-
+    commonlistdata.currentPage = tmpPage.slice(tmpPage.length/2) -1;
     $('[class*="gtr"]').each(function (i, ele) {
         console.log(i);
-        let type = typeParser(ele);
+        let type = parser$type(ele);
 
-        let date = publishDateParser(ele);
+        let date = parser$publishDate(ele);
 
-        let title = nameParser(ele);
+        let title = parser$name(ele);
 
-        let uploader = uploaderParser(ele);
+        let uploader = parser$uploader(ele);
 
-        let cover = coverUrlParser(ele);
+        let cover = parser$coverUrl(ele);
 
         commonlistdata.list.push({
             type: type,
@@ -86,7 +79,7 @@ spider.parseComicList = function (context) {
         })
     });
     console.log(commonlistdata);
-    return commonlistdata
+    return commonlistdata16
 };
 
 export default  spider;

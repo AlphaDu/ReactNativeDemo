@@ -10,11 +10,12 @@ export default function load(context){
     data.links = parser$links(context) ||[];
     data.rating =parser$rating(context)||0;
     data.page = parser$page(context)||1;
-    data.total_page = parser$total_page(context)||1;
+    data.total_pages = parser$total_pages(context)||1;
     data.tags = parser$tags(context)||{};
     data.g_id = parser$g_id(context)||'';
     data.g_token =parser$g_token(context)||'';
     data.merged_imgs=parser$merged_imgs(context)||[];
+    data.total_imgs=parser$total_imgs(context)||0;
     return data;
 }
 function parser$title(context) {
@@ -44,7 +45,7 @@ function parser$page(context) {
     let subContext = $('td[class="ptds"]', context).html();
     return $('a', subContext).text();
 }
-function parser$total_page(context) {
+function parser$total_pages(context) {
     let total = 0;
     let subContext = $('table[class="ptb"]', context).html();
     $('a', subContext).each((index, ele) => {
@@ -100,4 +101,10 @@ function parser$g_token(context){
     let regrex = /var\stoken\s=\s"([a-z0-9]+)";/;
     let res = regrex.exec(context);
     return res[1]
+}
+function parser$total_imgs(context){
+    let text = $('p[class="gpc"]',context).text();
+    let regrex = /of\s+(\d+)\s+images/;
+    let res = regrex.exec(text);
+    return res[1];
 }

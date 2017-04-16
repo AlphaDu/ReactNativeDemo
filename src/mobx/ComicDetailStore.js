@@ -6,6 +6,7 @@ import spider from '../common/spider'
 import {observable, computed, action, runInAction} from 'mobx'
 import {Image, ImageEditor, ImageStore} from 'react-native'
 import load from '../common/spiders/ComicDetailPageSpider';
+import {List,Map} from 'immutable'
 const cropData = {
     size: {
         width: 100,
@@ -23,7 +24,7 @@ export default class ComicDetailStore {
     @observable links = "";
     @observable rating = 0;
     @observable page = 0;
-    @observable total_page = 0;
+    @observable total_pages = 0
     @observable uploaderDate = "";
     @observable length = 0;
     @observable previews = [];
@@ -32,33 +33,61 @@ export default class ComicDetailStore {
     @observable g_token = '';
     @observable tags = {};
     @observable isFetching = false;
-
+    @observable html = '';
+    @observable url = '';
+    @observable merged_imgs = [];
+    @observable total_imgs = [];
+    //immutable
+    @observable img_datas= [];
     constructor(pageUrl) {
-        this.loadDataFromUrl(pageUrl);
+        this.url = pageUrl;
+        this.loadDataFromUrl();
     }
 
-    @action loadDataFromUrl = async(url) => {
-        let html = await this._fetchHtmlFromUrl(url);
-        runInAction(() => {
-            let data = load(html);
+    @action loadDataFromUrl = async() => {
+        this.html = await this._fetchHtmlFromUrl(this.url);
+            let data = load(this.html);
             this.title = data.tite;
             this.title_jpn = data.title_jpn;
             this.cover = data.cover;
             this.links = data.links;
             this.rating = data.rating;
             this.page = data.page;
-            this.total_page = data.total_page;
+            this.total_pages = data.total_pages;
             this.tags = data.tags;
             this.g_id = data.g_id;
             this.g_token = data.g_token;
+            this.total_imgs = data.total_imgs;
             this.combinedUrlToPreviewsUrl(data.merged_imgs);
-
-        });
-
+            //TODO
+            this.img_datas = List(Array.apply(null,Array(parseInt(total_imgs))).map(()=>{
+                return Map({
+                    preview:'',
+                    link:''
+                })
+            }));
 
     };
 
-    @action combinedUrlToPreviewsUrl = (urls) => {
+    @action loadNextPage = async() => {
+        if (this.page < this.total_page) {
+            let url = "http://exhentai.org/g/" + this.g_id + "/" + g_token + "/?p=" + this.page;
+            let html = await this._fetchHtmlFromUrl(url);
+            runInAction(() => {
+                this.page = this.page + 1;
+                let data = load(html);
+                let {links, merged_imgs} =  data;
+                this.combinedUrlToPreviewsUrl(merged_imgs)
+            });
+        }
+    };
+
+    @computed
+    get hasNextPage() {
+        return this.page < this.total_page
+    }
+
+    @action combinedUrlToPreviewsUrl = (urls =[]) => {
         let res = [];
         urls.forEach((url) => {
             let arr = this.cutPreview(url);
@@ -106,28 +135,62 @@ export default class ComicDetailStore {
         });
     }
 
+    @action.bound
+    addPreview(str) {
+        this.previews = this.previews.slice(0).concat(str);
+    }
+
     @action cutPreview(url) {
         const blockUrls = [];
         const onSuccess = (str) => {
-            runInAction(()=>{
-                this.previews.push(str);
-            })
+            this.addPreview(str)
         };
         const onError = (err) => {
             console.log(err)
         };
         Image.getSize(url, (width, height) => {
-            let blockNum = parseInt(width / 100);
-            for (let i = 0; i < blockNum; i++) {
-                ImageEditor.cropImage(url, {offset: {x: 100 * i, y: 0}, ...cropData}, onSuccess, onError);
-            }
+            runInAction(() => {
+                let blockNum = parseInt(width / 100);
+                for (let i = 0; i < blockNum; i++) {
+                    ImageEditor.cropImage(url, {offset: {x: 100 * i, y: 0}, ...cropData}, onSuccess, onError);
+                }
+            });
+
         });
         return blockUrls;
     }
 
-    cleanImageCache() {
-        for (let i = 0; i < this.previews.length; i++) {
-            ImageStore.removeImageForTag(this.previews[i]);
+    _mergedToCutted(url){
+
+        return new Promise((resolve, reject) => {
+            let imgArr = [];
+            Image.getSize(url, (width, height) => {
+
+                function* cutting() {
+                    let blockNum = parseInt(width / 100);
+                    for (let i = 0; i < blockNum; i++) {
+                        ImageEditor.cropImage(url, {offset: {x: 100 * i, y: 0}, ...cropData},
+                            (url)=>{
+                                imgArr.concat(url);
+                                next();
+                            },
+                            (error)=>{
+                                console.log(error);
+                                reject(error);
+                            });
+                        yield ;
+                    }
+                }
+                let next = cutting();
+                next();
+                resolve(imgArr)
+            });
+        });
+    }
+        cleanImageCache()
+        {
+            for (let i = 0; i < this.previews.length; i++) {
+                ImageStore.removeImageForTag(this.previews[i]);
+            }
         }
     }
-}

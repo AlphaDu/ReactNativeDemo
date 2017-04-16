@@ -42,7 +42,8 @@ cropData = {
 
 
 };
-const home="https://exhentai.org/g/1050309/fcce0646da/";
+// const home="https://exhentai.org/g/1050309/fcce0646da/";
+const home="https://exhentai.org/g/692165/9c00096e8f/";
 @observer
 export default class ComicDetailPage extends Component {
     constructor(props) {
@@ -52,8 +53,11 @@ export default class ComicDetailPage extends Component {
     static defaultProps ={
         url:home
     };
-    renderItem = (cellData) => (
-        <ImageCell  {...cellData}/>
+    componentWillMount(){
+        this.comicDetailStore.combinedUrlToPreviewsUrl(this.comicDetailStore.merged_imgs)
+    }
+    renderItem = (cellData,previews) => (
+        <ImageCell  {...cellData} pr = {previews}/>
     );
 
     onSuccess = (str) =>{
@@ -72,7 +76,6 @@ export default class ComicDetailPage extends Component {
     }
     render() {
         const {title,title_jpn,cover,links,previews,tags,isFetching,cellData} =  this.comicDetailStore;
-
         return (
             <ScrollView>
                 <Header title={title}
@@ -83,7 +86,7 @@ export default class ComicDetailPage extends Component {
                     <GridView
                         items={cellData}
                         itemsPerRow={3}
-                        renderItem={this.renderItem}
+                        renderItem={(data)=>this.renderItem(data,previews)}
                         style={{backgroundColor: '#F5FCFF'}}/>
                 </View>
 
