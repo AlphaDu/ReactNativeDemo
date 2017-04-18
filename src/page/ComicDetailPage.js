@@ -27,61 +27,74 @@ let mockdatas = [
 ];
 let preview = ["https://ehgt.org/m/001046/1046542-00.jpg"];
 cropData = {
-    size:{
-        width:100,
-        height:140
+    size: {
+        width: 100,
+        height: 140
     },
-    displaySize:{
-        width:200,
-        height:140
+    displaySize: {
+        width: 200,
+        height: 140
     },
-    offset:{
-        x:100,
-        y:0
+    offset: {
+        x: 100,
+        y: 0
     }
 
 
 };
 // const home="https://exhentai.org/g/1050309/fcce0646da/";
-const home="https://exhentai.org/g/692165/9c00096e8f/";
+const home = "https://exhentai.org/g/692165/9c00096e8f/";
 @observer
 export default class ComicDetailPage extends Component {
     constructor(props) {
         super(props);
-        this.comicDetailStore = new ComicDetailStore(this.props.url);
+        let params = {};
+        if(this.props.navigation){
+            params = this.props.navigation.state.params;
+        }
+        if (params.url) {
+            this.comicDetailStore = new ComicDetailStore(params.url);
+        }else{
+            this.comicDetailStore = new ComicDetailStore(home);
+        }
     }
-    static defaultProps ={
-        url:home
+
+    static defaultProps = {
+        url: home
     };
-    componentWillMount(){
+
+    componentWillMount() {
         this.comicDetailStore.combinedUrlToPreviewsUrl(this.comicDetailStore.merged_imgs)
     }
-    renderItem = (cellData,previews) => (
-        <ImageCell  {...cellData} pr = {previews}/>
+
+    renderItem = (cellData, previews) => (
+        <ImageCell  {...cellData} pr={previews}/>
     );
 
-    onSuccess = (str) =>{
+    onSuccess = (str) => {
         console.log("success");
         this.setState({
-           urls:[str]
+            urls: [str]
         });
 
     };
-    onFail = (err)=>{
+    onFail = (err) => {
 
     };
-    componentDidMount(){
-        ImageEditor.cropImage("https://ehgt.org/m/001046/1046542-00.jpg",cropData,this.onSuccess,this.onFail);
+
+    componentDidMount() {
+        ImageEditor.cropImage("https://ehgt.org/m/001046/1046542-00.jpg", cropData, this.onSuccess, this.onFail);
 
     }
-    render() {
-        const {title,title_jpn,cover,links,previews,tags,isFetching,cellData} =  this.comicDetailStore;
-        return (
-            <ScrollView>
-                <Header title={title}
-                        image={cover} uploaderTime="20170204" tags />
 
-                <View>
+    render() {
+        const {title, title_jpn, cover, links, previews, tags, isFetching, cellData} =  this.comicDetailStore;
+        return (
+            <ScrollView style={{backgroundColor:"#8E8E93"}}>
+                <Header title={title}
+                        image={cover} uploaderTime="20170204" tags/>
+
+                <View >
                     <Text>wocaoßßß</Text>
                     <GridView
                         items={cellData}
@@ -126,8 +139,8 @@ const ImageCell = props => {
     )
 }
 
-const MButton =  (props) =>(
-    <TouchableOpacity onPress = {props.onPress}>
+const MButton = (props) => (
+    <TouchableOpacity onPress={props.onPress}>
         <View style={styles.buttonStyle}>
             <Text style={{color:'#ffffff'}}>{props.title}</Text>
         </View>
@@ -136,6 +149,8 @@ const MButton =  (props) =>(
 const styles = StyleSheet.create({
     header: {},
     items: {},
-    buttonStyle: {height: 25, width: 60, borderColor: "#ffffff", borderWidth:2,alignItems: 'center',
-        justifyContent: 'space-around',borderRadius:5}
+    buttonStyle: {
+        height: 25, width: 60, borderColor: "#ffffff", borderWidth: 2, alignItems: 'center',
+        justifyContent: 'space-around', borderRadius: 5
+    }
 });

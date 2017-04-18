@@ -9,11 +9,14 @@ import {
     Animated,
     ScrollView,
     ActivityIndicator
-} from 'react-native'
+}
+    from
+        'react-native'
 import CookieManager from 'react-native-cookies'
 import ListPager from '../components/ListPager'
 import {observer} from 'mobx-react/native'
-import mockdata from '../mock/comiclist';
+import Spinner from 'react-native-loading-spinner-overlay';
+
 let model = ['a', 'b', 'c', 'e', 'f', 'g', 'h'];
 // CookieManager.setFromResponse('https://exhentai.org/', 'ipb_member_id=2390332; ipb_pass_hash=e9532dec36afd6d54eafa8ffb2e14168; igneous=aacb6fb36; s=1f6b1f494; uconfig=dm_t; lv=1491307778-1491735249', (res) => {
 //     // `res` will be true or false depending on success.
@@ -53,19 +56,33 @@ export default class ComicListPage extends Component {
         };
     }
 
+    jumpToDetail = (url) => {
+        this.props.navigation.navigate('Detail', {url: url})
+    };
     _renderRow = (data) => {
         return (
-            <ListCell {...data}/>
+            <ListCell {...data} onPress={this.jumpToDetail}/>
         )
     };
     goBack = () => {
 
+        this.store.isFetching = true;
+        this.store.goBack();
     };
+
+
+    goFoward = () => {
+        this.store.clearImage();
+        this.store.isFetching = true;
+        this.store.goFoward();
+    };
+
     render() {
         return (
-            <View style={{flex:1,flexDirection:'column'}}>
+            <View style={{flex:1,flexDirection:'column',backgroundColor:"#8E8E93"}}>
+                <Spinner visible={this.store.isFetching}/>
                 <View style={{flex:0.5,alignItems: 'center'}}>
-                    <ListPager goBack={()=>this.store.goBack()} goFoward={()=>this.store.goFoward()} />
+                    <ListPager goBack={()=>this.goBack()} goFoward={()=>this.goFoward()}/>
                 </View>
                 <View style={{flex:9}}>
                     <ListView
@@ -85,24 +102,42 @@ const header = {
     "Accept-Language": "zh-CN,zh;q=0.8",
     "Cache-Control": "max-age=0",
     "Connection": "keep-alive",
-     "Host": "exhentai.org",
+    "Host": "exhentai.org",
     "Referer": "https://exhentai.org/s/a10270b82f/1045863-4",
     "Upgrade-Insecure-Requests": "1",
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36"
 };
 const ListCell = (props) => {
     return (
-        <View>
-            <View style={{flexDirection:'row',height:90}}>
-                <View style={{flex:2}}>
-                    <Image source={{url:props.cover,
+        <View style={styles.listCell}>
+            <TouchableOpacity onPress={()=>props.onPress(props.link)}>
+                <View style={{flexDirection:'row',height:100}}>
+                    <View style={{flex:2}}>
+                        <Image source={{url:props.cover,
                     headers:header}} style={{width:'100%',height:'100%'}}/>
+                    </View>
+                    <View style={{flex:8}}>
+                        <Text>{props.title}</Text>
+                    </View>
                 </View>
-                <View style={{flex:8}}>
-                    <Text>wocao{props.title}</Text>
-                </View>
-            </View>
-            <View style={{bottom:0,position:'absolute',height:0.5,width:"100%",backgroundColor:"#6D6D6D"}}/>
+            </TouchableOpacity>
+            {/*<View style={{bottom:0,position:'absolute',height:0.5,width:"100%",backgroundColor:"#6D6D6D"}}/>*/}
         </View>
     );
 };
+const Pager = (props)=>{
+
+};
+const styles = StyleSheet.create({
+    listCell:{
+        margin:4,
+        borderRadius:9,
+        padding:5,
+        shadowColor: '#000000',
+        shadowOpacity: 0.9,
+        shadowOffset:{
+            width: 1,
+            height: 0.5,
+        }
+    }
+});

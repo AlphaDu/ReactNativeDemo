@@ -69,7 +69,7 @@ export default class ComicDetailStore {
 
     };
 
-    @action loadNextPage = async() => {
+    @action appendNextPage = async() => {
         if (this.page < this.total_page) {
             let url = "http://exhentai.org/g/" + this.g_id + "/" + g_token + "/?p=" + this.page;
             let html = await this._fetchHtmlFromUrl(url);
@@ -96,6 +96,7 @@ export default class ComicDetailStore {
         console.log(res);
         return res;
     };
+
 
     @computed
     get cellData() {

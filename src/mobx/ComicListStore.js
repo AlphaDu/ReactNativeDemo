@@ -63,7 +63,7 @@ export default class ComicListStore {
             let url = HOST + 'page=' + nextPage;
             let html = await this._fetchHtmlFromUrl(url);
             runInAction(() => {
-
+                this.isFetching = false;
                 let data = spider.parseComicList(html);
                 this.putDataToStore(data);
                 this.page = nextPage;
@@ -74,27 +74,42 @@ export default class ComicListStore {
     };
     @action.bound
     putDataToStore(data) {
-        this.comiclist = data.list;
+        this.comiclist.replace(data.list);
         this.currentPage = data.currentPage;
         this.total = data.total;
     }
+    @action clearImage(){
 
+        this.comiclist = [];
+
+    }
     @action goBack = async() => {
+        try{
+
         if (this.currentPage === 0) return;
         let nextPage = this.page - 1;
         let url = HOST + 'page=' + nextPage;
         let html = await this._fetchHtmlFromUrl();
+        runInAction(() => {
+        this.isFetching = false;
         data = spider.parseComicList(html);
         this.putDataToStore(data);
         this.page = nextpage;
+        });
+        }catch(err){
+            console.log(err);
+        }
     };
     @action goToPage = async(i) => {
         if (i < 0 || i > this.total || i === this.currentPage) return;
         let nextPage = i;
         let html = await this._fetchHtmlFromHtml();
+        runInAction(() => {
+        this.isFetching = false;
         data = spider.parseComicList(html);
         this.putDataToStore(data);
         this.page = nextpage;
+        });
 
     };
 

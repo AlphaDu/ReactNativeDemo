@@ -27,15 +27,15 @@ export default class Pager extends Component {
 
     render() {
         return (
-            <View style={{flex:1,flexDirection:'row',height:27,backgroundColor:'#AE837E'}}>
+            <View style={{flex:1,flexDirection:'row',height:27, justifyContent: 'center',alignItems: 'center'}}>
                 <TouchableOpacity style={{justifyContent:'center',alignItems: 'center',width:20}} onPress={()=>this.props.goBack()}>
                     <Icon name="caret-left" size={30}/>
                 </TouchableOpacity>
-                <TextInput style={{height:25,fontSize:25,padding:0,marginTop:10}}
+                <TextInput style={{width:50,fontSize:15,padding:0,margin:0}}
                            onSubmitEditing={(event) => {
                                this.props.goSkip(event.nativeEvent.text)
                            }}/>
-                <Text style={{height:30,fontSize:25}}>{"/" + this.props.totalPage}</Text>
+                <Text style={{fontSize:15,margin:0,padding:0 }}>{"/" + this.props.totalPage}</Text>
                 <TouchableOpacity style={{justifyContent:'center',alignItems: 'center',width:20}} onPress={()=>this.props.goFoward()}>
                     <Icon name="caret-right" size={30}/>
                 </TouchableOpacity>

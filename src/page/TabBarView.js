@@ -34,8 +34,8 @@ export default class TabBarView extends Component {
                     ()=><DefaultTabBar />
                 }
             >
+                <ComicListPage tabLabel="clist" key={1} navigation={this.props.navigation}/>
                 <DetailPage tabLabel="detal" key={6}/>
-                <ComicListPage tabLabel="clist" key={1}/>
                 <Test tabLabel='Main' key={2}/>
 
                 <Page3 tabLabel="Tab #3" key={3}/>
